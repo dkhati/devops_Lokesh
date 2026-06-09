@@ -2,7 +2,7 @@
 name: CI-CD
 on:
   push:
-    branches: [ "main" ] # Triggers the deploy every time you push code to main
+    branches: [ "main" ]
 
 jobs:
   deploy:
@@ -16,11 +16,11 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            # 1. Navigate to your project folder on the server
+            # 1. Navigate project folder on the server
             cd ~/node/docker-compose-react-nodejs-mysql/devops_Lokesh
             
             # 2. Pull down the newest code changes from GitHub
             git pull origin main
             
-            # 3. Rebuild the frontend and backend images, then restart the containers smoothly
+            # start deployment
             docker compose up -d --build --remove-orphans

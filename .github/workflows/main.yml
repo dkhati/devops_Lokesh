@@ -1,7 +1,7 @@
 name: CI-CD
 on:
   push:
-    branches: [ "main" ] 
+    branches: [ "main" ] # Triggers the deploy every time you push code to main
 
 jobs:
   deploy:
@@ -21,8 +21,11 @@ jobs:
             # 2. Pull down the newest code changes from GitHub
             git pull origin main
             
-            # 3. Stop running containers to free up ports and avoid network lockups
+            # 3. Clean up the current stack's containers and networks
             docker compose down
             
-            # 4. Rebuild the frontend and backend images, then start the containers smoothly
+            # 4. Force remove the old duplicate containers that cause port conflicts
+            docker rm -f docker-compose-react-nodejs-mysql-bezkoder-api-1 docker-compose-react-nodejs-mysql-bezkoder-ui-1 || true
+            
+            # 5. Rebuild and start the new containers cleanly
             docker compose up -d --build --remove-orphans
